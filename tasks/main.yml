@@ -1,0 +1,23 @@
+---
+
+- name: Get InfluxDB APT GPG key
+  apt_key:
+    url: 'https://repos.influxdata.com/influxdb.key '
+    id: '{{ influxdb_apt_repo_key_fingerprint }}'
+    state: present
+
+- name: Configure InfluxDB APT repository
+  apt_repository:
+    repo: 'deb {{ influxdb_apt_repo_base }}/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable'
+    state: present
+    update_cache: True
+
+- name: Ensure influxdb packages are installed
+  apt:
+    name: '{{ item }}'
+    state: 'present'
+    install_recommends: False
+  with_flattened:
+    - influxdb_base_packages
+  tags: [ 'role::influxdb:base_install' ]
+

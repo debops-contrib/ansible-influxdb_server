@@ -1,0 +1,29 @@
+---
+# Default variables
+# =================
+
+# .. contents:: Sections
+#    :local:
+#
+# ----------------------------------
+#   Packages and APT configuration
+# ----------------------------------
+
+
+# .. envvar:: influxdb_base_packages
+#
+# List of base packages required by InfluxDB.
+influxdb_packages_base:
+  - 'influxdb'
+
+# .. envvar:: influxdb_apt_repo_base
+#
+# Base APT repository URL.
+influxdb_apt_repo_base: 'https://repos.influxdata.com'
+
+
+# .. envvar:: influxdb_apt_repo_key_fingerprint
+#
+# GPG fingerprint for the public key used to sign the APT repository.
+influxdb_apt_repo_key_fingerprint: '418A7F2FB0E1E6E7EABF6FE8C2E73424D59097AB'
+
