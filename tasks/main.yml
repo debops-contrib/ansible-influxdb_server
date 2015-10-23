@@ -12,12 +12,59 @@
     state: present
     update_cache: True
 
+- name: Check if InfluxDB is already installed
+  stat:
+    path: '/etc/opt/influxdb/influxdb.conf'
+  register: influxdb_server_register_influxdb_exists
+
 - name: Ensure influxdb packages are installed
   apt:
     name: '{{ item }}'
     state: 'present'
     install_recommends: False
   with_flattened:
-    - influxdb_base_packages
+    - influxdb_packages_base
+    - influxdb_packages
+    - influxdb_server_protocol_collectd_packages[influxdb_server_protocol_collectd_enabled]
   tags: [ 'role::influxdb:base_install' ]
 
+
+- name: Add influxdb user to ssl-cert system group 
+  user: 
+    name: 'influxdb' 
+    state: 'present' 
+    createhome: False 
+    groups: 'ssl-cert' 
+    append: True
+
+
+- name: Ensure InfluxDB is running
+  service:
+    name: 'influxdb'
+    state: 'started'
+
+- name: Wait for InfluxDB to start on the first install
+  wait_for:
+    port: 8086
+    timeout: 60
+  when: (not influxdb_server_register_influxdb_exists.stat.exists)
+
+#- name: Get existing users
+#  shell: /opt/influxdb/influx -execute 'SHOW USERS' | tail -n '+2' | grep -v '^$' | awk '{print $1}'
+#  register: influxdb_server_register_user_list
+#  changed_when: False
+#
+- name: Create admin user on the first install
+  shell: /opt/influxdb/influx -execute "CREATE USER {{ influxdb_server_admin_user }} WITH PASSWORD '{{ influxdb_server_admin_password }}' WITH ALL PRIVILEGES"
+  when: (not influxdb_server_register_influxdb_exists.stat.exists)
+
+- name: Install config file
+  template:
+    src: '{{ item }}.j2'
+    dest: '/{{ item }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items:
+    - 'etc/opt/influxdb/influxdb.conf'
+  notify: [ 'Restart InfluxDB' ]

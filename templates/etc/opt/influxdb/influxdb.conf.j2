@@ -1,3 +1,8 @@
+###############################################################################
+### {{ ansible_managed }}
+###############################################################################
+
+
 ### Welcome to the InfluxDB configuration file.
 
 # Once every 24 hours InfluxDB will report anonymous data to m.influxdb.com
@@ -112,10 +117,10 @@ reporting-disabled = false
 ###
 
 [admin]
-  enabled = true
-  bind-address = ":8083"
-  https-enabled = false
-  https-certificate = "/etc/ssl/influxdb.pem"
+  enabled = {{ influxdb_server_interface_admin_enable | lower }}
+  bind-address = "{{ influxdb_server_interface_admin_bind_address }}:{{ influxdb_server_interface_admin_bind_port }}"
+  https-enabled = {{ influxdb_server_interface_admin_https_enabled | lower }}
+  https-certificate = "{{ influxdb_server_interface_admin_https_certificate }}"
 
 ###
 ### [http]
@@ -125,14 +130,14 @@ reporting-disabled = false
 ###
 
 [http]
-  enabled = true
-  bind-address = ":8086"
-  auth-enabled = false
+  enabled = {{ influxdb_server_protocol_http_enable | lower }}
+  bind-address = "{{ influxdb_server_protocol_http_bind_address }}:{{ influxdb_server_protocol_http_bind_port }}"
+  auth-enabled = {{ influxdb_server_protocol_http_auth_enabled | lower }}
   log-enabled = true
   write-tracing = false
   pprof-enabled = false
-  https-enabled = false
-  https-certificate = "/etc/ssl/influxdb.pem"
+  https-enabled = {{ influxdb_server_protocol_http_https_enabled | lower }}
+  https-certificate = "{{ influxdb_server_protocol_http_https_certificate }}"
 
 ###
 ### [[graphite]]
@@ -182,10 +187,10 @@ reporting-disabled = false
 ###
 
 [collectd]
-  enabled = false
-  # bind-address = ""
-  # database = ""
-  # typesdb = ""
+  enabled = {{ influxdb_server_protocol_collectd_enabled | lower }}
+  bind-address = "{{ influxdb_server_protocol_collectd_bind_address }}:{{ influxdb_server_protocol_collectd_bind_port }}"
+  database = "{{ influxdb_server_protocol_collectd_database }}"
+  typesdb = "{{ influxdb_server_protocol_collectd_typesdb }}"
 
   # These next lines control how batching works. You should have this enabled
   # otherwise you could get dropped metrics or poor performance. Batching

@@ -15,6 +15,7 @@
 # List of base packages required by InfluxDB.
 influxdb_packages_base:
   - 'influxdb'
+influxdb_packages: []
 
 # .. envvar:: influxdb_apt_repo_base
 #
@@ -26,4 +27,81 @@ influxdb_apt_repo_base: 'https://repos.influxdata.com'
 #
 # GPG fingerprint for the public key used to sign the APT repository.
 influxdb_apt_repo_key_fingerprint: '418A7F2FB0E1E6E7EABF6FE8C2E73424D59097AB'
+
+# Username of admin user
+influxdb_server_admin_user: 'admin'
+# Password of admin user
+influxdb_server_admin_password: "{{ lookup('password', secret + '/credentials/' + ansible_fqdn + '/influxdb/' + influxdb_server_admin_user + '/password length=20') }}"
+# enable admin interface
+influxdb_server_interface_admin_enable: True
+influxdb_server_interface_admin_bind_port: 8083
+influxdb_server_interface_admin_bind_address: ""
+influxdb_server_interface_admin_https_enabled: "{{ influxdb_server_pki }}"
+influxdb_server_interface_admin_https_certificate: "{{ influxdb_server_pki_path + '/' + influxdb_server_pki_realm + '/' + influxdb_server_pki_crt }}"
+
+influxdb_server_protocol_http_enable: True
+influxdb_server_protocol_http_bind_port: 8086
+influxdb_server_protocol_http_bind_address: ""
+influxdb_server_protocol_http_https_enabled: "{{ influxdb_server_pki }}"
+influxdb_server_protocol_http_https_certificate: "{{ influxdb_server_pki_path + '/' + influxdb_server_pki_realm + '/' + influxdb_server_pki_crt }}"
+influxdb_server_protocol_http_auth_enabled: True
+
+# FIXME: influxdb_server_protocol_http_https_enabled and influxdb_server_protocol_http_auth_enabled
+# /opt/influxdb/influx -ssl -host {{ ansible_fqdn }} -username {{ influxdb_server_admin_user }} -password '{{ influxdb_server_admin_password }}'
+#
+#  log-enabled = true
+#  write-tracing = false
+#  pprof-enabled = false
+
+influxdb_server_protocol_collectd_enabled: False
+influxdb_server_protocol_collectd_bind_port: 25826
+influxdb_server_protocol_collectd_bind_address: ""
+influxdb_server_protocol_collectd_database: "collectd"
+influxdb_server_protocol_collectd_typesdb: "/usr/share/collectd/types.db"
+influxdb_server_protocol_collectd_packages:
+  True: [ 'collectd-core' ]
+  False: []
+# -------------------------------------------
+#   Public Key Infrastructure configuration
+# -------------------------------------------
+
+# .. envvar:: influxdb_server_pki
+#
+# Enable or disable support for PKI infrastructure managed by ``debops.pki``.
+influxdb_server_pki: '{{ (True
+                            if (ansible_local|d() and ansible_local.pki|d() and
+                                ansible_local.pki.enabled|d() | bool)
+                            else False) | bool }}'
+
+
+# .. envvar:: influxdb_server_pki_path
+#
+# Base path of PKI infrastructure, managed by ``debops.pki`` role.
+influxdb_server_pki_path: '{{ ansible_local.pki.base_path
+                               if (ansible_local|d() and ansible_local.pki|d() and
+                                   ansible_local.pki.base_path|d())
+                               else "/etc/pki" }}'
+
+
+# .. envvar:: influxdb_server_pki_realm
+#
+# PKI realm used by InfluxDB role.
+influxdb_server_pki_realm: '{{ ansible_local.pki.realm
+                                 if (ansible_local|d() and ansible_local.pki|d() and
+                                     ansible_local.pki.realm|d())
+                                 else "system" }}'
+
+
+# .. envvar:: influxdb_server_pki_ca
+#
+# Default Root CA certificate used by InfluxDB, relative to
+# ``influxdb_pki_realm`` path.
+influxdb_server_pki_ca: 'CA.crt'
+
+
+# .. envvar:: influxdb_server_pki_crt
+#
+# File containing certificate and key used by InfluxDB server, relative to
+# ``influxdb_server_pki_realm`` path.
+influxdb_server_pki_crt: 'combined/{{ ansible_fqdn }}.pem'
 
