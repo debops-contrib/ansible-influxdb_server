@@ -10,12 +10,18 @@
 # ----------------------------------
 
 
-# .. envvar:: influxdb_base_packages
+# .. envvar:: influxdb_packages_base
 #
 # List of base packages required by InfluxDB.
 influxdb_packages_base:
   - 'influxdb'
+
+
+# .. envvar:: influxdb_packages
+#
+# Additional pckages to install.
 influxdb_packages: []
+
 
 # .. envvar:: influxdb_apt_repo_base
 #
@@ -28,6 +34,10 @@ influxdb_apt_repo_base: 'https://repos.influxdata.com'
 # GPG fingerprint for the public key used to sign the APT repository.
 influxdb_apt_repo_key_fingerprint: '418A7F2FB0E1E6E7EABF6FE8C2E73424D59097AB'
 
+# ----------------------------------
+#   Admin account configuration
+# ----------------------------------
+
 # .. envvar:: influxdb_server_delegate_to
 #
 # This is a counterpart variable to the one in ``debops.influxdb`` role, it
@@ -35,22 +45,91 @@ influxdb_apt_repo_key_fingerprint: '418A7F2FB0E1E6E7EABF6FE8C2E73424D59097AB'
 # correctly delegate Ansible tasks.
 influxdb_server_delegate_to: '{{ ansible_fqdn }}'
 
-# Username of admin user
+
+# .. envvar:: influxdb_server_admin_user
+#
+# Name of theadmin user
 influxdb_server_admin_user: 'admin'
-# Password of admin user
+
+
+# .. envvar:: influxdb_server_admin_password
+#
+# Password of the admin user
 influxdb_server_admin_password: "{{ lookup('password', secret + '/credentials/' + ansible_fqdn + '/influxdb/' + influxdb_server_admin_user + '/password length=20') }}"
-# enable admin interface
+
+
+# ----------------------------------
+#   Admin interface configuration
+# ----------------------------------
+
+
+# .. envvar:: influxdb_server_interface_admin_enable
+#
+# Enable admin interface
 influxdb_server_interface_admin_enable: True
+
+
+# .. envvar:: influxdb_server_interface_admin_bind_port
+#
+# Port admin interface should be listening on.
 influxdb_server_interface_admin_bind_port: 8083
+
+
+# .. envvar:: influxdb_server_interface_admin_bind_address
+#
+# Bind address. All interfaces when empty.
 influxdb_server_interface_admin_bind_address: ""
+
+
+# .. envvar:: influxdb_server_interface_admin_https_enabled
+#
+# Should HTTPS be enabled?
 influxdb_server_interface_admin_https_enabled: "{{ influxdb_server_pki|bool }}"
+
+
+# .. envvar:: influxdb_server_interface_admin_https_certificate
+#
+# Path to certificate.
 influxdb_server_interface_admin_https_certificate: "{{ influxdb_server_pki_path + '/' + influxdb_server_pki_realm + '/' + influxdb_server_pki_crt }}"
 
+# ----------------------------------
+#   HTTP protocol configuration
+# ----------------------------------
+
+
+# .. envvar:: influxdb_server_protocol_http_enable
+#
+# Enable HTTP API
 influxdb_server_protocol_http_enable: True
+
+
+
+# .. envvar:: influxdb_server_protocol_http_bind_port
+#
+# Port to listen on.
 influxdb_server_protocol_http_bind_port: 8086
+
+
+# .. envvar:: influxdb_server_protocol_http_bind_address
+#
+# Bind address. All interfaces when empty.
 influxdb_server_protocol_http_bind_address: ""
+
+
+# .. envvar:: influxdb_server_protocol_http_https_enabled
+#
+# Should HTTPS be enabled?
 influxdb_server_protocol_http_https_enabled: "{{ influxdb_server_pki|bool }}"
+
+
+# .. envvar:: influxdb_server_protocol_http_https_certificate
+#
+# Path to certificate.
 influxdb_server_protocol_http_https_certificate: "{{ influxdb_server_pki_path + '/' + influxdb_server_pki_realm + '/' + influxdb_server_pki_crt }}"
+
+
+# .. envvar:: influxdb_server_protocol_http_auth_enabled
+#
 influxdb_server_protocol_http_auth_enabled: True
 
 # FIXME: influxdb_server_protocol_http_https_enabled and influxdb_server_protocol_http_auth_enabled
@@ -60,14 +139,41 @@ influxdb_server_protocol_http_auth_enabled: True
 #  write-tracing = false
 #  pprof-enabled = false
 
+# ----------------------------------
+#   Collectd protocol configuration
+# ----------------------------------
+
+
+# .. envvar:: influxdb_server_protocol_collectd_enabled
+#
+# Enable collectd protocol support.
 influxdb_server_protocol_collectd_enabled: False
+
+
+# .. envvar:: influxdb_server_protocol_collectd_bind_port
+#
+# Port number to listen on.
 influxdb_server_protocol_collectd_bind_port: 25826
+
+
+# .. envvar:: influxdb_server_protocol_collectd_bind_address
+#
+# Bind address. All interfaces when empty.
 influxdb_server_protocol_collectd_bind_address: ""
+
+
+# .. envvar:: influxdb_server_protocol_collectd_database
+#
+# Destination database
 influxdb_server_protocol_collectd_database: "collectd"
+
+
+# .. envvar:: influxdb_server_protocol_collectd_typesdb
+#
+# Path to types.db file (from collectd-core package)
 influxdb_server_protocol_collectd_typesdb: "/usr/share/collectd/types.db"
-influxdb_server_protocol_collectd_packages:
-  True: [ 'collectd-core' ]
-  False: []
+
+
 # -------------------------------------------
 #   Public Key Infrastructure configuration
 # -------------------------------------------

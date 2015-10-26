@@ -1,1 +1,4 @@
 ---
+influxdb_server_protocol_collectd_packages:
+  True: [ 'collectd-core' ]
+  False: []
