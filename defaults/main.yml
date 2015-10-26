@@ -28,6 +28,13 @@ influxdb_apt_repo_base: 'https://repos.influxdata.com'
 # GPG fingerprint for the public key used to sign the APT repository.
 influxdb_apt_repo_key_fingerprint: '418A7F2FB0E1E6E7EABF6FE8C2E73424D59097AB'
 
+# .. envvar:: influxdb_server_delegate_to
+#
+# This is a counterpart variable to the one in ``debops.influxdb`` role, it
+# should point to the FQDN hostname of the server so that other role can
+# correctly delegate Ansible tasks.
+influxdb_server_delegate_to: '{{ ansible_fqdn }}'
+
 # Username of admin user
 influxdb_server_admin_user: 'admin'
 # Password of admin user
@@ -36,13 +43,13 @@ influxdb_server_admin_password: "{{ lookup('password', secret + '/credentials/' 
 influxdb_server_interface_admin_enable: True
 influxdb_server_interface_admin_bind_port: 8083
 influxdb_server_interface_admin_bind_address: ""
-influxdb_server_interface_admin_https_enabled: "{{ influxdb_server_pki }}"
+influxdb_server_interface_admin_https_enabled: "{{ influxdb_server_pki|bool }}"
 influxdb_server_interface_admin_https_certificate: "{{ influxdb_server_pki_path + '/' + influxdb_server_pki_realm + '/' + influxdb_server_pki_crt }}"
 
 influxdb_server_protocol_http_enable: True
 influxdb_server_protocol_http_bind_port: 8086
 influxdb_server_protocol_http_bind_address: ""
-influxdb_server_protocol_http_https_enabled: "{{ influxdb_server_pki }}"
+influxdb_server_protocol_http_https_enabled: "{{ influxdb_server_pki|bool }}"
 influxdb_server_protocol_http_https_certificate: "{{ influxdb_server_pki_path + '/' + influxdb_server_pki_realm + '/' + influxdb_server_pki_crt }}"
 influxdb_server_protocol_http_auth_enabled: True
 
