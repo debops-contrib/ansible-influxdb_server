@@ -3,6 +3,18 @@
 dependencies:
   - role: debops.secret
 
+  - role: debops.ferm
+    tags: [ 'depend::ferm', 'depend::ferm:influxdb_server', 'depend-of::influxdb_server', 'type::dependency' ]
+    ferm_input_list:
+
+      - type: 'dport_accept'
+        enabled: '{{ influxdb_server_protocol_collectd_enabled|bool }}'
+        protocol: 'udp'
+        dport: [ '{{ influxdb_server_protocol_collectd_bind_port }}' ]
+        saddr: '{{ influxdb_server_collectd_allow }}'
+        weight: '30'
+        filename: 'influxdb_server_dependency_collectd'
+
 #  - role: debops.etc_services
 #    etc_services_dependent_list:
 #      - '{{ influxdb_server_etc_services_dependent_list }}'

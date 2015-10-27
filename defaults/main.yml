@@ -32,7 +32,7 @@ influxdb_apt_repo_base: 'https://repos.influxdata.com'
 # .. envvar:: influxdb_apt_repo_key_fingerprint
 #
 # GPG fingerprint for the public key used to sign the APT repository.
-influxdb_apt_repo_key_fingerprint: '418A7F2FB0E1E6E7EABF6FE8C2E73424D59097AB'
+influxdb_apt_repo_key_fingerprint: '05CE15085FC09D18E99EFB22684A14CF2582E0C5'
 
 # ----------------------------------
 #   Admin account configuration
@@ -173,6 +173,12 @@ influxdb_server_protocol_collectd_database: "collectd"
 # Path to types.db file (from collectd-core package)
 influxdb_server_protocol_collectd_typesdb: "/usr/share/collectd/types.db"
 
+
+# .. envvar:: influxdb_server_collectd_allow
+#
+# List of IP addresses or CIDR subnets which should be allowed to send
+# collectd stats to the DB.
+influxdb_server_collectd_allow: []
 
 # -------------------------------------------
 #   Public Key Infrastructure configuration
