@@ -103,6 +103,12 @@ influxdb_server_interface_admin_https_certificate: "{{ influxdb_server_pki_path 
 influxdb_server_protocol_http_enable: True
 
 
+# .. envvar:: influxdb_server_http_allow
+#
+# List of IP addresses or CIDR subnets which should be allowed to access
+# HTTP API.
+influxdb_server_http_allow: []        
+
 
 # .. envvar:: influxdb_server_protocol_http_bind_port
 #

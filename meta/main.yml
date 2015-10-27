@@ -15,6 +15,13 @@ dependencies:
         weight: '30'
         filename: 'influxdb_server_dependency_collectd'
 
+      - type: 'dport_accept'
+        enabled: '{{ influxdb_server_protocol_http_enable|bool }}'
+        protocol: 'tcp'
+        dport: [ '{{ influxdb_server_protocol_http_bind_port }}' ]
+        saddr: '{{ influxdb_server_http_allow }}'
+        weight: '30'
+        filename: 'influxdb_server_dependency_http'
 #  - role: debops.etc_services
 #    etc_services_dependent_list:
 #      - '{{ influxdb_server_etc_services_dependent_list }}'
