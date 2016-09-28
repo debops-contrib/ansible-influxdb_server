@@ -228,5 +228,5 @@ influxdb_server_pki_ca: 'CA.crt'
 #
 # File containing certificate and key used by InfluxDB server, relative to
 # ``influxdb_server_pki_realm`` path.
-influxdb_server_pki_crt: 'combined/{{ ansible_fqdn }}.pem'
+influxdb_server_pki_crt: 'default.pem'
 

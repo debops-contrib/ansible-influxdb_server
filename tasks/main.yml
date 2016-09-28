@@ -14,7 +14,7 @@
 
 - name: Check if InfluxDB is already installed
   stat:
-    path: '/etc/opt/influxdb/influxdb.conf'
+    path: '/etc/influxdb/influxdb.conf'
   register: influxdb_server_register_influxdb_exists
 
 - name: Ensure influxdb packages are installed
@@ -53,13 +53,12 @@
   tags: [ 'role::influxdb_server:config' ]
 
 - name: Add influxdb user to ssl-cert system group 
-  user: 
-    name: 'influxdb' 
-    state: 'present' 
-    createhome: False 
-    groups: 'ssl-cert' 
+  user:
+    name: 'influxdb'
+    state: 'present'
+    createhome: False
+    groups: 'ssl-cert'
     append: True
-
 
 - name: Ensure InfluxDB is running
   service:
@@ -73,7 +72,7 @@
   when: (not influxdb_server_register_influxdb_exists.stat.exists)
 
 - name: Create admin user on the first install
-  shell: /opt/influxdb/influx -execute "CREATE USER {{ influxdb_server_admin_user }} WITH PASSWORD '{{ influxdb_server_admin_password }}' WITH ALL PRIVILEGES"
+  shell: /usr/bin/influx -execute "CREATE USER {{ influxdb_server_admin_user }} WITH PASSWORD '{{ influxdb_server_admin_password }}' WITH ALL PRIVILEGES"
   when: (not influxdb_server_register_influxdb_exists.stat.exists)
 
 - name: Install config file
@@ -84,5 +83,5 @@
     group: 'root'
     mode: '0644'
   with_items:
-    - 'etc/opt/influxdb/influxdb.conf'
+    - 'etc/influxdb/influxdb.conf'
   notify: [ 'Restart InfluxDB' ]
