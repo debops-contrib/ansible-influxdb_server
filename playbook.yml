@@ -1,0 +1,33 @@
+---
+
+- name: Manage InfluxDB server
+  hosts: [ 'debops_service_influxdb_server' ]
+  become: True
+
+  environment: '{{ inventory__environment | d({})
+                   | combine(inventory__group_environment | d({}))
+                   | combine(inventory__host_environment  | d({})) }}'
+
+  roles:
+    - role: debops.ferm
+      tags: [ 'role::ferm' ]
+      ferm_dependent_rules:
+  
+        - type: 'accept'
+          enabled: '{{ influxdb_server_protocol_collectd_enabled|bool }}'
+          protocol: 'udp'
+          dport: [ '{{ influxdb_server_protocol_collectd_bind_port | string }}' ]
+          saddr: '{{ influxdb_server_collectd_allow }}'
+          weight: '30'
+          filename: 'influxdb_server_dependency_collectd'
+  
+        - type: 'accept'
+          enabled: '{{ influxdb_server_protocol_http_enable|bool }}'
+          protocol: 'tcp'
+          dport: [ '{{ influxdb_server_protocol_http_bind_port | string }}' ]
+          saddr: '{{ influxdb_server_http_allow }}'
+          weight: '30'
+          filename: 'influxdb_server_dependency_http'
+
+    - role: debops.influxdb_server
+      tags: [ 'role::influxdb_server' ]

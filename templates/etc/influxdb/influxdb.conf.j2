@@ -9,7 +9,7 @@
 # The data includes a random ID, os, arch, version, the number of series and other
 # usage data. No data from user databases is ever transmitted.
 # Change this option to true to disable reporting.
-reporting-disabled = false
+reporting-disabled = {{ influxdb_server__reporting_disabled|lower }}
 
 # we'll try to get the hostname automatically, but if it the os returns something
 # that isn't resolvable by other servers in the cluster, use this option to
@@ -54,8 +54,8 @@ reporting-disabled = false
   # These are the WAL settings for the storage engine >= 0.9.3
   wal-dir = "/var/lib/influxdb/wal"
   wal-logging-enabled = true
-  
-  # Trace logging provides more verbose output around the tsm engine. Turning 
+
+  # Trace logging provides more verbose output around the tsm engine. Turning
   # this on can provide more useful output for debugging tsm engine issues.
   # trace-logging-enabled = false
 
@@ -179,15 +179,17 @@ reporting-disabled = false
   realm = "InfluxDB"
 
 ###
-### [subsciber]
+### [subscriber]
 ###
 ### Controls the subscriptions, which can be used to fork a copy of all data
 ### received by the InfluxDB host.
 ###
 
-[subsciber]
+[subscriber]
   enabled = true
-  http-timeout = "30s"
+  # http-timeout = "30s"
+  # write-concurrency = 40
+  # write-buffer-size = 1000
 
 
 ###

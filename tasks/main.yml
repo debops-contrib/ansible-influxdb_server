@@ -23,9 +23,9 @@
     state: 'present'
     install_recommends: False
   with_flattened:
-    - influxdb_packages_base
-    - influxdb_packages
-    - influxdb_server_protocol_collectd_packages[influxdb_server_protocol_collectd_enabled]
+    - '{{ influxdb_packages_base }}'
+    - '{{ influxdb_packages }}'
+    - '{{ influxdb_server_protocol_collectd_packages[influxdb_server_protocol_collectd_enabled] }}'
   tags: [ 'role::influxdb:base_install' ]
 
 - name: Make sure that Ansible local fact directory exists
@@ -74,6 +74,11 @@
 - name: Create admin user on the first install
   shell: /usr/bin/influx -execute "CREATE USER {{ influxdb_server_admin_user }} WITH PASSWORD '{{ influxdb_server_admin_password }}' WITH ALL PRIVILEGES"
   when: (not influxdb_server_register_influxdb_exists.stat.exists)
+
+- name: Divert original /etc/influxdb/influxdb.conf
+  command: dpkg-divert --quiet --local --divert /etc/influxdb/influxdb.conf.dpkg-divert --rename /etc/influxdb/influxdb.conf
+  args:
+    creates: '/etc/influxdb/influxdb.conf.dpkg-divert'
 
 - name: Install config file
   template:
