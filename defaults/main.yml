@@ -72,7 +72,7 @@ influxdb_server_interface_admin_enable: True
 # .. envvar:: influxdb_server_interface_admin_bind_port
 #
 # Port admin interface should be listening on.
-influxdb_server_interface_admin_bind_port: 8083
+influxdb_server_interface_admin_bind_port: '8083'
 
 
 # .. envvar:: influxdb_server_interface_admin_bind_address
@@ -107,13 +107,13 @@ influxdb_server_protocol_http_enable: True
 #
 # List of IP addresses or CIDR subnets which should be allowed to access
 # HTTP API.
-influxdb_server_http_allow: []        
+influxdb_server_http_allow: []
 
 
 # .. envvar:: influxdb_server_protocol_http_bind_port
 #
 # Port to listen on.
-influxdb_server_protocol_http_bind_port: 8086
+influxdb_server_protocol_http_bind_port: '8086'
 
 
 # .. envvar:: influxdb_server_protocol_http_bind_address
@@ -159,7 +159,7 @@ influxdb_server_protocol_collectd_enabled: False
 # .. envvar:: influxdb_server_protocol_collectd_bind_port
 #
 # Port number to listen on.
-influxdb_server_protocol_collectd_bind_port: 25826
+influxdb_server_protocol_collectd_bind_port: '25826'
 
 
 # .. envvar:: influxdb_server_protocol_collectd_bind_address
@@ -177,7 +177,7 @@ influxdb_server_protocol_collectd_database: "collectd"
 # .. envvar:: influxdb_server_protocol_collectd_typesdb
 #
 # Path to types.db file (from collectd-core package)
-influxdb_server_protocol_collectd_typesdb: "/usr/share/collectd/types.db"
+influxdb_server_protocol_collectd_typesdb: "/usr/local/share/collectd"
 
 
 # .. envvar:: influxdb_server_collectd_allow
@@ -228,5 +228,6 @@ influxdb_server_pki_ca: 'CA.crt'
 #
 # File containing certificate and key used by InfluxDB server, relative to
 # ``influxdb_server_pki_realm`` path.
-influxdb_server_pki_crt: 'combined/{{ ansible_fqdn }}.pem'
 
+influxdb_server_pki_crt: 'default.pem'
+#influxdb_server_pki_crt: 'combined/{{ ansible_fqdn }}.pem'

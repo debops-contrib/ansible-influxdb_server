@@ -76,13 +76,13 @@ reporting-disabled = false
   # wal-partition-size-threshold = 20971520
 
 ###
-### [cluster]
+### [coordinator]
 ###
 ### Controls non-Raft cluster behavior, which generally includes how data is
 ### shared across shards.
 ###
 
-[cluster]
+[coordinator]
   shard-writer-timeout = "5s" # The time within which a shard must respond to write.
   write-timeout = "5s" # The time within which a write operation must complete on the cluster.
 
