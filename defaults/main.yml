@@ -177,7 +177,7 @@ influxdb_server_protocol_collectd_database: "collectd"
 # .. envvar:: influxdb_server_protocol_collectd_typesdb
 #
 # Path to types.db file (from collectd-core package)
-influxdb_server_protocol_collectd_typesdb: "/usr/local/share/collectd"
+influxdb_server_protocol_collectd_typesdb: "/usr/share/collectd"
 
 
 # .. envvar:: influxdb_server_collectd_allow
