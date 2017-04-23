@@ -74,6 +74,7 @@
 - name: Create admin user on the first install
   shell: /usr/bin/influx -execute "CREATE USER {{ influxdb_server_admin_user }} WITH PASSWORD '{{ influxdb_server_admin_password }}' WITH ALL PRIVILEGES"
   when: (not influxdb_server_register_influxdb_exists.stat.exists)
+  no_log: True
 
 - name: Divert original /etc/influxdb/influxdb.conf
   command: dpkg-divert --quiet --local --divert /etc/influxdb/influxdb.conf.dpkg-divert --rename /etc/influxdb/influxdb.conf
